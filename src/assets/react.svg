@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Scales of Justice">
+  <title>Scales of Justice</title>
+  <!-- finial -->
+  <circle cx="32" cy="10" r="3" fill="currentColor" stroke="none"/>
+  <!-- pillar -->
+  <line x1="32" y1="13" x2="32" y2="42"/>
+  <!-- crossbar -->
+  <line x1="16" y1="20" x2="48" y2="20"/>
+  <!-- left chain -->
+  <line x1="22" y1="20" x2="18" y2="30"/>
+  <line x1="22" y1="20" x2="26" y2="30"/>
+  <!-- right chain -->
+  <line x1="42" y1="20" x2="38" y2="30"/>
+  <line x1="42" y1="20" x2="46" y2="30"/>
+  <!-- left pan (filled to read at favicon sizes) -->
+  <path d="M14 30h16c0 6-4.5 10-8 10s-8-4-8-10z" fill="currentColor" stroke="none"/>
+  <!-- right pan -->
+  <path d="M34 30h16c0 6-4.5 10-8 10s-8-4-8-10z" fill="currentColor" stroke="none"/>
+  <!-- base -->
+  <path d="M24 48h16" />
+  <path d="M18 54h28" />
+</svg>

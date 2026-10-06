@@ -1,0 +1,45 @@
+.modern-button {
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    line-height: 1.5;
+    font-weight: 400;
+    padding: auto;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 2em;
+   
+    
+    box-shadow: 0 4px 24px rgba(60,60,60, 0.18);
+    cursor: pointer;
+    transition: 
+      transform 0.13s cubic-bezier(.33,1.6,.44,1), 
+      box-shadow 0.13s cubic-bezier(.33,1.6,.44,1),
+      background 0.2s;
+    outline: none;
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: linear-gradient(90deg,#676666,#817f7f 100%);
+    color: #222;
+    
+    border: 1.5px solid #cccccc;
+    border-radius: 1.1em;
+    font-size: 1.08rem;
+    box-shadow: 0 2px 12px rgba(50,50,50,0.07);
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.18s;
+    position: relative;
+}
+  
+.modern-button:hover {
+    transform: translateY(-2px) scale(1.045);
+    border-color: #7a8cff;
+    box-shadow: 0 0 0 2.5px rgba(122,140,255,0.22);
+}
+  
+.modern-button:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(80,80,80,0.15);
+}
