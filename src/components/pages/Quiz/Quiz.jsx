@@ -11,7 +11,7 @@ async function loadPassageUrl(listOfFileNames) {
     return listOfFileNames[indexOfFileName];
 }
 async function loadFileNames(signal) {
-    return fetch("https://raw.githubusercontent.com/cwilliams2-cmd/Gov1074Quiz/refs/heads/main/fileNames.json", { signal })
+    return fetch("https://raw.githubusercontent.com/Colin-techh/Gov1023QuizTexts/refs/heads/main/fileNames.json", { signal })
             .then(res => res.json())
             .then(json => json["textNames"])
             .catch(err => {
