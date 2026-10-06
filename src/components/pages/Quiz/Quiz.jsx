@@ -4,6 +4,7 @@ import Passage from "../../atoms/Passage";
 import ButtonBar from "../../molecules/ButtonBar";
 import { useState, useEffect} from "react";
 import Head from "../../atoms/Head";
+import { supabase } from "../../../lib/supabaseClient";
 
 async function loadPassageUrl(listOfFileNames) {
     
@@ -11,28 +12,29 @@ async function loadPassageUrl(listOfFileNames) {
     
     return listOfFileNames[indexOfFileName];
 }
-async function loadFileNames(signal) {
-    return fetch("https://raw.githubusercontent.com/Colin-techh/Gov1023QuizTexts/refs/heads/main/fileNames.json", { signal })
-            .then(res => res.json())
-            .then(json => json["textNames"])
-            .catch(err => {
-                if(err.name == "AbortError") {
-                    return;
-                }
-                alert("Failed to load passage");
-            });
+async function loadFileNames() {
+    const {data, error} = await supabase
+        .storage
+        .from('texts')
+        // Pass an empty path to list files at the root of the `texts` bucket.
+        // Use a real folder name here only when the files are stored under it.
+        .list('', {
+            limit: 100,
+            offset: 0,
+            sortBy: { column: 'name', order: 'asc' },
+        }); 
     
+    if(error) {
+        console.log(error);
+        return;
+    }
+    const fileNames = (data ?? [])
+        .filter(file => file.id !== null) // excludes folder entries
+        .map(file => file.name);
+    
+    return fileNames;
 }
-async function getSource(signal) {
-    return fetch(`https://raw.githubusercontent.com/cwilliams2-cmd/Gov1074Quiz/refs/heads/main/passageTitles.json`, { signal })
-            .then(res => res.json())
-            .catch(err => {
-                if(err.name == "AbortError") {
-                    return;
-                }
-                alert("Failed to load passage source");
-            });
-}
+
 function Quiz() {
     
     const [author, setAuthor] = useState("");
@@ -42,19 +44,13 @@ function Quiz() {
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
-        loadFileNames(signal).then(response => {
-            if(signal.aborted){
-                return;
-            }
+        loadFileNames().then(response => {
+            
             setList(response);
             return loadPassageUrl(response);
         })
         .then(res => {
             setAuthor(res);
-            return getSource(signal);
-        })
-        .then(res => {
-            setSource(res);
         })
         .catch(err => {console.log(err);});
         return () => controller.abort();
