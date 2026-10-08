@@ -4,7 +4,7 @@ function Next({nextPassage}) {
             <button
                 className="modern-button"
                 onClick={nextPassage}
-                >Next</button>
+                >Next Passage</button>
         </div>
     );
 }

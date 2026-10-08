@@ -1,9 +1,9 @@
 import "./Passage.css"
 import GetPassage from "../pages/Quiz/getRandomPassage";
-function Passage({passageAuthor}) {
+function Passage({fileName}) {
     return(
         <div className="passage">
-            <GetPassage passageAuthor={passageAuthor}/>
+            <GetPassage fileName={fileName}/>
         </div>
     );
 }

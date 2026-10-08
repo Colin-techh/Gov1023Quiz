@@ -6,76 +6,100 @@ import { useState, useEffect} from "react";
 import Head from "../../atoms/Head";
 import { supabase } from "../../../lib/supabaseClient";
 
-async function loadPassageUrl(listOfFileNames) {
+async function getRandomObjectFrom(listOfFileNames) {
     
     let indexOfFileName = Math.floor(Math.random() * listOfFileNames.length) 
     
     return listOfFileNames[indexOfFileName];
 }
-async function loadFileNames() {
+async function pickRandomTextFromAuthor(author) {
     const {data, error} = await supabase
-        .storage
         .from('texts')
+        .select()
+        .eq('author',author)
+    if(error) {
+        console.log(error);
+        return;
+    }
+    if (!data?.length) {
+        return;
+    }
+
+    const randomIndex = Math.floor(Math.random() * data.length);
+    return data[randomIndex].textName;
+}
+async function getAuthorList() {
+    const {data, error} = await supabase
+        .from('authors')
         // Pass an empty path to list files at the root of the `texts` bucket.
         // Use a real folder name here only when the files are stored under it.
-        .list('', {
-            limit: 100,
-            offset: 0,
-            sortBy: { column: 'name', order: 'asc' },
-        }); 
+        .select('author'); 
     
     if(error) {
         console.log(error);
         return;
     }
-    const fileNames = (data ?? [])
-        .filter(file => file.id !== null) // excludes folder entries
-        .map(file => file.name);
     
-    return fileNames;
+    return data;
 }
 
 function Quiz() {
     
-    const [author, setAuthor] = useState("");
+    const [fileName, setFileName] = useState("");
     const [guess, setGuess] = useState("");
     const [list, setList] = useState("");
-    const [source, setSource] = useState("");
+    const [authorPlain, setAuthorPlain] = useState('');
     useEffect(() => {
-        const controller = new AbortController();
-        const signal = controller.signal;
-        loadFileNames().then(response => {
+        
+        getAuthorList().then(response => {
             
             setList(response);
-            return loadPassageUrl(response);
+            return getRandomObjectFrom(response);
         })
-        .then(res => {
-            setAuthor(res);
+        .then((authorName) => {
+            setAuthorPlain(authorName.author);
+            return pickRandomTextFromAuthor(authorName.author);
+        })
+        .then(textName => {
+            setFileName(textName);
         })
         .catch(err => {console.log(err);});
-        return () => controller.abort();
     }, []);
     
-    const clicksSubmit = () => {
-        if(author.slice(0, -6) == guess) {
-            alert("Correct! Answer was " + author.slice(0, -6));
+    const clicksSubmit =  () => {
+        if(authorPlain == guess) {
+            alert("Correct! Answer was " + authorPlain);
         } else {
-            alert("Incorrect, answer was " + author.slice(0, -6));
+            alert("Incorrect, answer was " + authorPlain);
         }
     }
 
     const nextPassage = () => {
-        loadPassageUrl(list).then(res => {
-            setAuthor(res);
+        getRandomObjectFrom(list).then(res => {
+            setAuthorPlain(res.author);
+            return pickRandomTextFromAuthor(res.author);
+        })
+        .then(textName => {
+            setFileName(textName);
         });
     }
-    const alertSource = () => {
-        alert(source[author]);
+    const alertSource = async () => {
+        const {data, error} = await supabase
+            .from('texts')
+            .select()
+            .eq('textName',fileName)
+            .single();
+        if(error) {
+            console.log(error);
+            return;
+        }
+
+        alert(data.source);
     }
     return(
         <div>
             <Head></Head>
-            <Passage passageAuthor={author}/>
+            <Passage fileName={fileName}/>
             <ButtonBar onGuess={clicksSubmit} onChange={setGuess} list = {list} nextPassage={nextPassage} source = {alertSource}/>
 
         </div>

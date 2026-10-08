@@ -5,14 +5,16 @@ function Dropdown({onChange, list}) {
 
     useEffect(() => {
         if(list) {
-            setAuthors([...new Set(list.map(name => name.slice(0, -6)))]);
+            setAuthors([...new Set(list.map(obj => obj.author))]);
+            // Initialize initial guess
+            onChange(authors[0]);
         }
     }, [list]);
 
     if(!authors) {
         return;
     }
-    
+
     return(
         <div className="dropdown-wrapper">
             <select id="nice-dropdown" className="nice-dropdown" onChange={e => onChange(e.target.value)}>
