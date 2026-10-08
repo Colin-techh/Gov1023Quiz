@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route} from 'react-router-dom';
 function App() {
   return (
     <BrowserRouter>
-      <title>Gov1074 Practice</title>
+      <title>Gov1023 Practice</title>
       <link rel="icon" type="image/x-icon" href="src/assets/react.svg"></link>
       <Routes>
         <Route path="/" element = {<Welcome />} />
